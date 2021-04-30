@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassicTextAdventureJam", "ClassicTextAdventureJam\ClassicTextAdventureJam.csproj", "{7C806ABC-0718-47DB-8A13-213EDA86A303}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EsotericFiction", "EsotericFiction\EsotericFiction.csproj", "{B7D42274-146A-4D39-8B6F-700D5673B5A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C806ABC-0718-47DB-8A13-213EDA86A303}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C806ABC-0718-47DB-8A13-213EDA86A303}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C806ABC-0718-47DB-8A13-213EDA86A303}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C806ABC-0718-47DB-8A13-213EDA86A303}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7D42274-146A-4D39-8B6F-700D5673B5A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7D42274-146A-4D39-8B6F-700D5673B5A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7D42274-146A-4D39-8B6F-700D5673B5A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7D42274-146A-4D39-8B6F-700D5673B5A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {768DD124-18E5-4A34-89C5-96F52DD2384F}
+	EndGlobalSection
+EndGlobal
