@@ -2,7 +2,7 @@
 
 namespace EsotericFiction {
     public class Map : IItem {
-        public string Name { get; }
+        public string Name { get; set; }
         public string Description { get; set; }
         public Grid Grid { get; }
         private readonly MapUseWork mapUseWork;

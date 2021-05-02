@@ -5,7 +5,7 @@ namespace EsotericFiction {
         public Map Map { get; }
         public override IEnumerable<string> Upon {
             get {
-                yield return Map.Name;
+                yield return Map.Name.ToUpper();
             }
         }
 

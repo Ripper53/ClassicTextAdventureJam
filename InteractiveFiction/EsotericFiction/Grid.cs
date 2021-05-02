@@ -21,24 +21,37 @@ namespace EsotericFiction {
             Standalone = 'O';
 
         public enum Tile {
-            Wall, Ground
+            Ground, Wall
         };
         public string Description { get; private set; }
         public Tile[,] Tiles { get; }
         public Vector2 Size { get; }
 
+        public Grid(Vector2 size) {
+            Tiles = new Tile[size.x, size.y];
+            Size = size;
+        }
+
         public void GenerateRoom(Vector2 position, Vector2 size) {
+            // Horizontal
+            for (int x = 0; x < size.x; x++) {
+                for (int y = 0; y < 2; y++) {
+                    Vector2 pos = position + new Vector2(x, y * (size.y - 1));
+                    Tiles[pos.x, pos.y] = Tile.Wall;
+                }
+            }
+            // Vertical
             for (int y = 0; y < size.y; y++) {
-                for (int x = 0; x < size.x; x++) {
-                    Vector2 pos = position + new Vector2(x, y);
-                    Tiles[pos.x, pos.y] = Tile.Ground;
+                for (int x = 0; x < 2; x++) {
+                    Vector2 pos = position + new Vector2(x * (size.x - 1), y);
+                    Tiles[pos.x, pos.y] = Tile.Wall;
                 }
             }
         }
 
         public void GenerateDisplay() {
             StringBuilder stringBuilder = new StringBuilder(Size.x * Size.y);
-            for (int y = 0; y < Size.y; y++) {
+            for (int y = Size.y; y > -1; y--) {
                 for (int x = 0; x < Size.x; x++) {
                     Vector2 pos = new Vector2(x, y);
                     if (!CheckTile(pos, Tile.Wall)) {
@@ -59,7 +72,16 @@ namespace EsotericFiction {
                                 if (CheckTile(left, Tile.Wall)) {
                                     // ALL
                                     stringBuilder.Append(Center);
+                                } else {
+                                    // TOP, RIGHT, BOTTOM
+                                    stringBuilder.Append(LeftTriad);
                                 }
+                            } else if (CheckTile(left, Tile.Wall)) {
+                                // TOP, RIGHT, LEFT
+                                stringBuilder.Append(BottomTriad);
+                            } else {
+                                // TOP, RIGHT
+                                stringBuilder.Append(BottomLeft);
                             }
                         } else if (CheckTile(bottom, Tile.Wall)) {
                             // TOP, BOTTOM
