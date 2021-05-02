@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
 namespace EsotericFiction {
-    public abstract class UseWork : IWork {
+    public abstract class ExamineWork : IWork {
         public IEnumerable<string> Action {
             get {
-                yield return "USE";
-                yield return "U";
+                yield return "EXAMINE";
+                yield return "E";
             }
         }
         public abstract IEnumerable<string> Upon { get; }
