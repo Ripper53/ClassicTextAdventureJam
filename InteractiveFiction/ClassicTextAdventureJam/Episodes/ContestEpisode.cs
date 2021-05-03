@@ -31,6 +31,7 @@ namespace ClassicTextAdventureJam.Episodes {
                 new Question("What’s the fastest speed one can travel?", "The speed of light", "Teleportation", "SPEED OF LIGHT", "LIGHT SPEED", "LIGHTSPEED"),
                 new Question("", "", "", ""),
                 new Question("", "", "", ""),
+                new Question("", "", "", ""),
                 new Question("", "", "", "")
             };
 
@@ -39,27 +40,34 @@ namespace ClassicTextAdventureJam.Episodes {
 
 ""We’ll start with an easy one. What’s the fastest speed one can travel?""");
 
+                Act.AsyncConsole console = new Act.AsyncConsole();
+                Question question;
+                string answer;
+                bool CheckIfCorrect() {
+                    foreach (string contain in question.Contains) {
+                        if (answer.Contains(contain)) {
+                            // CORRECT!
+                            Act.WriteLine(@"""Correct!""");
+                            return true;
+                        }
+                    }
+                    return false;
+                }
                 while (questions.Count > 0) {
                     int index = rng.Next(0, questions.Count);
-                    Question question = questions[index];
+                    question = questions[index];
                     questions.RemoveAt(index);
-                    if (ReadInputBefore(question, out string answer)) {
+                    if (ReadInputBefore(console, question, out answer)) {
                         // PLAYER ANSWERED!
                         answer = answer.ToUpper();
-                        foreach (string contain in question.Contains) {
-                            if (answer.Contains(contain)) {
-                                // CORRECT!
-
-                                break;
-                            }
-                        }
-                        // INCORRECT!
-
+                        if (!CheckIfCorrect()) // INCORRECT!
+                            Act.WriteLine(@"""Incorrect!""");
                     } else if (question.Correct) {
                         // Opponent answered correctly!
-
+                        Act.WriteLine(@"""Correct!""");
                     } else {
                         // Opponent answered incorrectly!
+                        Act.WriteLine(@"""Incorrect!""");
                     }
                 }
             }
@@ -80,8 +88,7 @@ namespace ClassicTextAdventureJam.Episodes {
 
         }
 
-        private static bool ReadInputBefore(Question question, out string answer) {
-            var console = AsyncConsole.AsyncConsoleInput();
+        private static bool ReadInputBefore(Act.AsyncConsole console, Question question, out string answer) {
             bool cancel = false;
             var task = Task.Run(() => {
                 // your task on separate thread
@@ -93,10 +100,11 @@ namespace ClassicTextAdventureJam.Episodes {
                 while (!done && !cancel) { }
             });
 
-            if (Task.WaitAny(console.ReadLine(), task) == 0) {
+            Task<string> input = console.ReadLine();
+            if (Task.WaitAny(input, task) == 0) {
                 cancel = true;
                 // if ReadLine finished first
-                answer = console.Current.Result; // last user input (await instead of Result in async method)
+                answer = input.Result; // last user input (await instead of Result in async method)
                 return true;
             } else {
                 // task finished first
@@ -109,7 +117,7 @@ namespace ClassicTextAdventureJam.Episodes {
                     // WRONG
                     answer = question.WrongAnswer;
                 }
-                Act.WriteLine(Environment.NewLine + answer);
+                Act.WriteLine($@"{Environment.NewLine}""{answer},"" said {StaticData.OpponentName}.");
                 return false;
             }
         }

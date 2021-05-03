@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EsotericFiction {
     public static class Act {
@@ -43,6 +45,25 @@ namespace EsotericFiction {
             WriteTitle(item.Title);
             WriteLine(item.Description);
         }
+
+        #region ASYNC
+        public class AsyncConsole {
+            private readonly IEnumerator<Task<string>> console;
+
+            public AsyncConsole() {
+                static IEnumerator<Task<string>> Loop() {
+                    while (true) yield return Task.Run(() => Act.ReadLine());
+                }
+                console = Loop();
+            }
+
+            public Task<string> ReadLine() {
+                if (console.Current == null || console.Current.IsCompleted) console.MoveNext();
+                return console.Current;
+            }
+
+        }
+        #endregion
 
     }
 }
