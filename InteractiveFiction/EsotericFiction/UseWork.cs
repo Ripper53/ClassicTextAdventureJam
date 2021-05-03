@@ -2,7 +2,7 @@
 
 namespace EsotericFiction {
     public abstract class UseWork : IWork {
-        public IEnumerable<string> Action {
+        public virtual IEnumerable<string> Action {
             get {
                 yield return "USE";
                 yield return "U";

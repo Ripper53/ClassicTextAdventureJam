@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using EsotericFiction;
 
-namespace ClassicTextAdventureJam {
+namespace ClassicTextAdventureJam.Items {
     public class RadioItem : IItem {
         public string Name => throw new NotImplementedException();
         private readonly UseWork useWork;

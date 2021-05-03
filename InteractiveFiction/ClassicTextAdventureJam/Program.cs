@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EsotericFiction;
 using ClassicTextAdventureJam.Scenes;
+using ClassicTextAdventureJam.Items;
 
 namespace ClassicTextAdventureJam {
     class Program {
@@ -16,6 +17,7 @@ namespace ClassicTextAdventureJam {
 A gunshot pierces your ears and echoes throughout the ship broadcasted from the radio, then the sound of struggling people, and finally a thump to end the hustling.
 
 [Type ""HELP"" for command list]
+[Command always follows: ""(Verb) (Noun)""]
 
 Your inventory contains a map of the ship.");
 
@@ -81,17 +83,50 @@ Your inventory contains a map of the ship.");
         }
 
         static Scene BuildScenes(string name) {
-            Scene
-                controlRoom = new StaticScene("Control Room", "The radio sits silently at the front. The grand windows stare out into the darkness of space. To the south is the Lab."),
-                lab = new LabScene("Lab", "Four capsules made of glass sit at the side.", "A lectern with buttons stands at the center. To the north is the Control Room.");
+            Scene controlRoom = new StaticScene("Control Room", "The radio sits silently at the front. The grand window stares out into the darkness of space. To the south is the Lab.");
+            LabScene lab = new LabScene("Lab", "Four capsules made of glass sit at the side.", "A lectern with buttons stands at the center. To the north is the Control Room.");
+            Scene hall = new StaticScene("Hall", "");
+            Scene storage = new StaticScene("Storage", "");
+            ConcourseScene concourse = new ConcourseScene();
+            StadiumScene stadium = new StadiumScene(name);
+
+            concourse.SetDescription("A large room with multiple tables like a banquet hall. One wall scorched by the bright lights displays space across its massive window.");
+
+            #region Episodes
+
+            #endregion
 
             #region Directions
             controlRoom.AddWork(new RoamWork(new string[] { RoamWork.South, "LAB" }, lab));
             lab.AddWork(new RoamWork(new string[] { RoamWork.North, "CONTROL" }, controlRoom));
+            lab.AddWork(new RoamWork(new string[] { RoamWork.East, "HALL" }, hall));
+            lab.AddWork(new RoamWork(new string[] { RoamWork.West, "STORAGE" }, storage));
+            storage.AddWork(new RoamWork(new string[] { RoamWork.East, "LAB" }, lab));
+            hall.AddWork(new RoamWork(new string[] { RoamWork.West, "LAB" }, lab));
+            hall.AddWork(new RoamWork(new string[] { RoamWork.East, "CONCOURSE" }, concourse));
+            concourse.AddWork(new RoamWork(new string[] { RoamWork.West, "HALL" }, hall));
+
+            // TEST
+            controlRoom.AddWork(new RoamWork(new string[] { "TEST" }, stadium));
             #endregion
 
             #region Items
             controlRoom.AddItem(new RadioItem());
+            controlRoom.AddItem(new WindowItem {
+                Description = "The window stares out into the vastness of space. The stars glitter in their reds, blues, and whites."
+            });
+
+            {
+                CapsuleItem capsuleItem = new CapsuleItem {
+                    Description = "Four empty capsules sit against the wall."
+                };
+                WindowItem windowItem = new WindowItem {
+                    Description = "The stars from here are barely visible to the naked eye because of the sharp lights within the Concourse."
+                };
+                lab.AddItem(capsuleItem);
+                lab.AddItem(new LecternItem(lab, concourse, capsuleItem, windowItem));
+                concourse.AddItem(windowItem);
+            }
             #endregion
 
             return controlRoom;

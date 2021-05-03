@@ -7,6 +7,7 @@
         }
 
         public void Play(IEpisode.Token token) {
+            token.RemoveEpisode(this);
             Act.WriteLine(Description);
         }
 

@@ -11,18 +11,13 @@ namespace EsotericFiction {
         public Scene ActiveScene { get; private set; }
         public void SetActiveScene(Scene scene) {
             ActiveScene = scene;
-            IEpisode.Token token = new IEpisode.Token(this, ActiveScene);
-            foreach (IEpisode episode in ActiveScene.Episodes) {
-                episode.Play(token);
-                if (token.IsCanceled)
-                    return;
-            }
         }
 
         public GameManager(IEntity playerEntity) {
             PlayerEntity = playerEntity;
         }
 
+        private readonly HashSet<IEpisode> toRemoveEpisodes = new HashSet<IEpisode>();
         public void Execute() {
             string input;
             Scene previousScene;
@@ -46,21 +41,21 @@ EXAMINE/E");
                     default:
                         if (!PlayerEntity.Inventory.Work(this, input) && !ActiveScene.Work(this, input))
                             DisplayError();
-                        if (ActiveScene != previousScene)
+                        if (ActiveScene != previousScene) {
                             Act.Display(ActiveScene);
+                            IEpisode.Token token = new IEpisode.Token(this, ActiveScene, toRemoveEpisodes);
+                            foreach (IEpisode episode in ActiveScene.Episodes) {
+                                episode.Play(token);
+                                if (token.IsCanceled)
+                                    return;
+                            }
+                            foreach (IEpisode episode in toRemoveEpisodes)
+                                ActiveScene.RemoveEpisode(episode);
+                            toRemoveEpisodes.Clear();
+                        }
                         break;
                 }
             } while (input != "QUIT");
-        }
-
-        private void Display() {
-            Act.BackgroundColor = ConsoleColor.White;
-            Act.ForegroundColor = ConsoleColor.Black;
-            Act.Write(ActiveScene.Title);
-
-            Act.BackgroundColor = ConsoleColor.Black;
-            Act.ForegroundColor = ConsoleColor.White;
-            Act.WriteLine(Environment.NewLine + Environment.NewLine + ActiveScene.Description);
         }
 
         private void DisplayError() {
