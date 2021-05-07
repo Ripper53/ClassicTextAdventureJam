@@ -51,8 +51,9 @@ namespace ClassicTextAdventureJam.Items {
                 if (index < text.Length - 1) {
                     labScene.CapsulesDescription = "A pure white liquid floats in the four capsules.";
                     capsuleItem.Description = "A pure white liquid floats in the four capsules.";
-                    concourseScene.SetDescription("The tables and walls are illuminated by a figure floating at the center of the room. The massive window glows with pure white, an identical energy the floating figure emits throughout the Concourse.");
+                    concourseScene.SetDescription("The tables and walls are illuminated by a figure floating at the center of the room. The massive window glows with pure white, an identical energy the floating figure emits throughout the Concourse. The Hall is to the west.");
                     windowItem.Description = "The stars from here are invisible to the naked eye because of the sharp light the figure emits within the Concourse.";
+                    labScene.RopeItem.CanUse = true;
                     index += 1;
                 }
             }

@@ -8,6 +8,8 @@ namespace EsotericFiction {
     public class GameManager {
         public IEntity PlayerEntity { get; }
         public string ErrorMessage { get; set; }
+        private bool quit = false;
+        public void Quit() => quit = true;
         public Scene ActiveScene { get; private set; }
         public void SetActiveScene(Scene scene) {
             ActiveScene = scene;
@@ -25,6 +27,8 @@ namespace EsotericFiction {
             do {
                 previousScene = ActiveScene;
                 input = Act.ReadLine().ToUpper();
+                if (input == "QUIT")
+                    Quit();
                 switch (input) {
                     case "HELP":
                     case "H":
@@ -32,7 +36,9 @@ namespace EsotericFiction {
                         Act.WriteLine(@"Commands:
 INVENTORY/I
 GO
-EXAMINE/E");
+EXAMINE/E
+COLLECT/PICK UP
+USE");
                         break;
                     case "INVENTORY":
                     case "I":
@@ -55,7 +61,7 @@ EXAMINE/E");
                         }
                         break;
                 }
-            } while (input != "QUIT");
+            } while (!quit);
         }
 
         private void DisplayError() {

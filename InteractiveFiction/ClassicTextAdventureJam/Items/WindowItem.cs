@@ -17,6 +17,7 @@ namespace ClassicTextAdventureJam.Items {
                 get {
                     yield return "WINDOW";
                     yield return "WINDOWS";
+                    yield return "SPACE";
                 }
             }
             private readonly WindowItem windowItem;

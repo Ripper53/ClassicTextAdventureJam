@@ -4,7 +4,8 @@ using EsotericFiction;
 
 namespace ClassicTextAdventureJam.Items {
     public class RadioItem : IItem {
-        public string Name => throw new NotImplementedException();
+        public string Name => "Radio";
+        public string Description => "A circular microphone attaches to the radio with a black wire. A red ring goes around the perimeter on its back, where the palm fits onto comfortably. The speakers behind a crosshatch of steel to protect its internal components.";
         private readonly UseWork useWork;
         private readonly ExamineWork examineWork;
         public IEnumerable<IWork> Work {
@@ -49,8 +50,6 @@ namespace ClassicTextAdventureJam.Items {
             }
         }
         #endregion
-
-        public string Description => "Radio";
 
     }
 }

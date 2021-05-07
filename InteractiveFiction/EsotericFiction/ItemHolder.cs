@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace EsotericFiction {
     public class ItemHolder {
@@ -21,6 +22,9 @@ namespace EsotericFiction {
                 return true;
             }
             return false;
+        }
+        public bool ContainsItem(IItem item) {
+            return items.Contains(item);
         }
         #endregion
         #region Work
@@ -67,19 +71,33 @@ namespace EsotericFiction {
         private bool ParseWorkText(string text, out string action, out string upon) {
             action = null;
             upon = null;
+            StringBuilder stringBuilder = new StringBuilder(text.Length + 1);
             string[] actions = text.Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
             if (actions.Length < 2)
                 return false;
             foreach (string k in actions) {
+                stringBuilder.Append(k);
                 if (action == null) {
-                    if (work.ContainsKey(k))
+                    if (work.ContainsKey(k)) {
                         action = k;
+                    } else {
+                        string s = stringBuilder.ToString();
+                        if (work.ContainsKey(s))
+                            action = s;
+                    }
                 } else if (upon == null) {
                     if (work[action].ContainsKey(k)) {
                         upon = k;
                         return true;
+                    } else {
+                        string s = stringBuilder.ToString();
+                        if (work[action].ContainsKey(s)) {
+                            upon = s;
+                            return true;
+                        }
                     }
                 }
+                stringBuilder.Append(' ');
             }
             return false;
         }

@@ -9,6 +9,12 @@ namespace EsotericFiction {
             get {
                 yield return "GO";
                 yield return "TO";
+                yield return "TRAVEL";
+                yield return "TRAVERSE";
+                yield return "WALK";
+                yield return "RUN";
+                yield return "JOG";
+                yield return "ROAM";
             }
         }
         public IEnumerable<string> Upon { get; }

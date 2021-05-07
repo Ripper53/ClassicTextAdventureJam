@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using EsotericFiction;
 using ClassicTextAdventureJam.Scenes;
 using ClassicTextAdventureJam.Items;
@@ -11,8 +10,8 @@ namespace ClassicTextAdventureJam {
             Act.BackgroundColor = ConsoleColor.Black;
 
             Act.Write("The eye in space watches over a spaceship. Constraining its freedom, disallowing any action it deems unworthy of being committed. Within the ship, there is you, with the name: ");
-            string name = Act.ReadLine();
-            Act.WriteLine($@"""{name},"" the radio at the front of the ship broadcasts. ""I'm not sure what's happened with our captain. He's gone mad!""
+            StaticData.PlayerName = Act.ReadLine();
+            Act.WriteLine($@"""{StaticData.PlayerName},"" the radio at the front of the ship broadcasts. ""I'm not sure what's happened with our captain. He's gone mad!""
 
 A gunshot pierces your ears and echoes throughout the ship broadcasted from the radio, then the sound of struggling people, and finally a thump to end the hustling.
 
@@ -78,19 +77,20 @@ Your inventory contains a map of the ship.");
             
             gameManager.PlayerEntity.Inventory.AddItem(map);
             gameManager.PlayerEntity.Inventory.GenerateDisplay();
-            gameManager.SetActiveScene(BuildScenes(name));
+            gameManager.SetActiveScene(BuildScenes(gameManager));
             gameManager.Execute();
         }
 
-        static Scene BuildScenes(string name) {
+        static Scene BuildScenes(GameManager gameManager) {
             Scene controlRoom = new StaticScene("Control Room", "The radio sits silently at the front. The grand window stares out into the darkness of space. To the south is the Lab.");
-            LabScene lab = new LabScene("Lab", "Four capsules made of glass sit at the side.", "A lectern with buttons stands at the center. To the north is the Control Room.");
-            Scene hall = new StaticScene("Hall", "");
-            Scene storage = new StaticScene("Storage", "");
             ConcourseScene concourse = new ConcourseScene();
-            StadiumScene stadium = new StadiumScene(name);
+            StadiumScene stadium = new StadiumScene(gameManager);
+            DynamicScene storage = new DynamicScene("Storage", "Contains a rope hung by a hook from its wall. The Lab is to the east.");
+            RopeItem ropeItem = new RopeItem(storage, concourse, stadium);
+            LabScene lab = new LabScene("Lab", "Four capsules made of glass sit at the side.", "A lectern with buttons stands at the center. To the north is the Control Room.", ropeItem);
+            Scene hall = new StaticScene("Hall", "East leads to the Concourse. South leads to the Lab.");
 
-            concourse.SetDescription("A large room with multiple tables like a banquet hall. One wall scorched by the bright lights displays space across its massive window.");
+            concourse.SetDescription("A large room with multiple tables like a banquet hall. One wall scorched by the bright lights displays space across its massive window. The Hall is to the west.");
 
             #region Episodes
 
@@ -98,7 +98,7 @@ Your inventory contains a map of the ship.");
 
             #region Directions
             controlRoom.AddWork(new RoamWork(new string[] { RoamWork.South, "LAB" }, lab));
-            lab.AddWork(new RoamWork(new string[] { RoamWork.North, "CONTROL" }, controlRoom));
+            lab.AddWork(new RoamWork(new string[] { RoamWork.North, "CONTROL", "CONTROL ROOM" }, controlRoom));
             lab.AddWork(new RoamWork(new string[] { RoamWork.East, "HALL" }, hall));
             lab.AddWork(new RoamWork(new string[] { RoamWork.West, "STORAGE" }, storage));
             storage.AddWork(new RoamWork(new string[] { RoamWork.East, "LAB" }, lab));
@@ -107,7 +107,7 @@ Your inventory contains a map of the ship.");
             concourse.AddWork(new RoamWork(new string[] { RoamWork.West, "HALL" }, hall));
 
             // TEST
-            controlRoom.AddWork(new RoamWork(new string[] { "TEST" }, stadium));
+            //controlRoom.AddWork(new RoamWork(new string[] { "TEST" }, stadium));
             #endregion
 
             #region Items
@@ -127,6 +127,9 @@ Your inventory contains a map of the ship.");
                 lab.AddItem(new LecternItem(lab, concourse, capsuleItem, windowItem));
                 concourse.AddItem(windowItem);
             }
+
+            storage.AddItem(new HookItem());
+            storage.AddItem(ropeItem);
             #endregion
 
             return controlRoom;

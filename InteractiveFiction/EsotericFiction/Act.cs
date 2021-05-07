@@ -49,10 +49,16 @@ namespace EsotericFiction {
         #region ASYNC
         public class AsyncConsole {
             private readonly IEnumerator<Task<string>> console;
+            public bool IsReading { get; private set; } = false;
 
             public AsyncConsole() {
-                static IEnumerator<Task<string>> Loop() {
-                    while (true) yield return Task.Run(() => Act.ReadLine());
+                IEnumerator<Task<string>> Loop() {
+                    while (true) yield return Task.Run(() => {
+                        IsReading = true;
+                        string r = Act.ReadLine();
+                        IsReading = false;
+                        return r;
+                    });
                 }
                 console = Loop();
             }
